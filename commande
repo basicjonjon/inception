@@ -1,0 +1,10 @@
+#build le container
+sudo docker build -t nginx .
+
+
+#le lancer (-d faire marcher en arriere plan -p set le port)
+sudo docker run -d -p 8080:8080 nginx
+
+
+#acceder au terminal un fois le docker lancer 
+sudo docker exec -it <id_container> sh
