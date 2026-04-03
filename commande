@@ -8,3 +8,7 @@ sudo docker run -d -p 8080:8080 nginx
 
 #acceder au terminal un fois le docker lancer 
 sudo docker exec -it <id_container> sh
+
+#nettoyage 
+docker system prune -af
+sudo rm -rf /home/jle-doua/data/mariadb/*
