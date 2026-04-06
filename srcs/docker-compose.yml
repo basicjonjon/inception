@@ -9,6 +9,14 @@ services:
     networks:
       - inception
     restart: always
+    secrets:
+      - db_password
+      - root_password
+      - db_user
+    environment:
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_USER_FILE: /run/secrets/db_user
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_user
 
   wordpress:
     build: ./requirements/wordpress
@@ -22,6 +30,14 @@ services:
     networks:
       - inception
     restart: always
+    secrets:
+      - db_password
+      - root_password
+      - db_user
+    environment:
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_USER_FILE: /run/secrets/db_user
+
 
   nginx:
     build: ./requirements/nginx
@@ -54,3 +70,11 @@ volumes:
 networks:
   inception:
     driver: bridge
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  root_password:
+    file: ../secrets/db_root_password.txt
+  db_user:
+    file: ../secrets/credentials.txt

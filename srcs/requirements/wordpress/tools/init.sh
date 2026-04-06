@@ -1,4 +1,6 @@
 #!/bin/bash
+export MYSQL_PASSWORD=$(cat ${MYSQL_PASSWORD_FILE})
+export MYSQL_USER=$(cat ${MYSQL_USER_FILE})
 
 mkdir -p /var/www/html
 cd /var/www/html
