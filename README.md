@@ -9,6 +9,12 @@ The aim of this project is to become familiar with **Docker** and **Docker Compo
 
 
 ### [install docker ](https://docs.docker.com/engine/install/)
+### Optional: run Docker without sudo
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
 
 ### install make (for ubuntu)
 ```bash
@@ -28,10 +34,15 @@ MYSQL_DATABASE=wordpress
 ```bash
 touch credential.txt db_password.txt db_root_password.txt
 ```
-credential -> your admin username
-db_password -> your admin password
-credential -> your root password
+ - credential -> your admin username
+- db_password -> your admin password
+- db_root_password -> your root password
 
+### change host
+in `/etc/hosts` add or  change 
+```text
+127.0.0.1 <42login>.42.fr
+``` 
 ## start docker
 ```bash
 make

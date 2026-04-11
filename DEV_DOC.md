@@ -1,6 +1,6 @@
 # Developer Documentation
 
-## 1. Project Overview
+## Project Overview
 
 This project is a Docker-based infrastructure built as part of the 42 curriculum.
 
@@ -19,30 +19,34 @@ The project is designed to be:
 
 ---
 
-## 2. Project Structure
+## Project Structure
 
 ```bash
 .
+├── DEV_DOC.md
 ├── Makefile
 ├── README.md
+├── secrets
+│   ├── credentials.txt
+│   ├── db_password.txt
+│   └── db_root_password.txt
 └── srcs
     ├── docker-compose.yml
+    ├── .env
     └── requirements
         ├── mariadb
         │   ├── conf
         │   │   └── 50-server.cnf
         │   ├── Dockerfile
-        │   ├── .dockerignore
         │   └── tools
         │       └── init.sh
         ├── nginx
         │   ├── conf
         │   │   └── nginx.conf
-        │   ├── Dockerfile
-        │   └── .dockerignore
+        │   └── Dockerfile
         └── wordpress
+            ├── conf
             ├── Dockerfile
-            ├── .dockerignore
             └── tools
                 └── init.sh
 ```
@@ -50,27 +54,19 @@ The project is designed to be:
 ### Structure details
 
 - `Makefile`: main entrypoint to build, start, stop, clean, and rebuild the infrastructure
+- `secrets/credential.txt`: define database admin username
+- `secrets/db_password.txt`: define database admin password
+- `secrets/db_root_password.txt`: define database root password
+- `srcs/.env`: define environement variables domain name & database name
 - `srcs/docker-compose.yml`: defines services, volumes, and network
 - `srcs/requirements/mariadb/`: MariaDB image, config, and initialization script
 - `srcs/requirements/nginx/`: NGINX image and HTTPS configuration
 - `srcs/requirements/wordpress/`: WordPress image and initialization script
 
----
 
-## 3. Prerequisites
+## Prerequisites
 
-Before setting up the project, make sure the following tools are installed on your machine:
-
-- Docker
-- Docker Compose
-- Make
-
-### Ubuntu installation
-
-```bash
-sudo apt update
-sudo apt install docker.io docker-compose make
-```
+### [install docker ](https://docs.docker.com/engine/install/)
 
 ### Optional: run Docker without sudo
 
@@ -79,53 +75,56 @@ sudo usermod -aG docker $USER
 newgrp docker
 ```
 
----
-
-## 4. Environment Setup
-
-## 4.1 `.env` file
-
-The project uses environment variables stored in a `.env` file.
-
-Example:
-
-```env
-DOMAIN_NAME=yourlogin.42.fr
-MYSQL_DATABASE=wordpress
-MYSQL_USER=wp_user
-MYSQL_PASSWORD=wp_password
-MYSQL_ROOT_PASSWORD=root_password
-WORDPRESS_TITLE=Inception
-WORDPRESS_ADMIN_USER=wpadmin
-WORDPRESS_ADMIN_PASSWORD=admin_password
-WORDPRESS_ADMIN_EMAIL=admin@example.com
-WORDPRESS_USER=user42
-WORDPRESS_USER_EMAIL=user42@example.com
-WORDPRESS_USER_PASSWORD=user_password
+### install make (for ubuntu)
+```bash
+sudo apt-get install
 ```
+### create .env file 
+in srcs/
+```bash
+touch srcs/.env
+```
+add DOMAIN_NAME and MYSQL_DATABASE environement variable
+```
+DOMAIN_NAME=login.42.fr
+MYSQL_DATABASE=wordpress
+```
+### create secret file
+```bash
+touch credential.txt db_password.txt db_root_password.txt
+```
+credential -> your admin username
+db_password -> your admin password
+credential -> your root password
 
-### Notes
+### change host
+in `/etc/hosts` add or  change 
+```text
+127.0.0.1 <42login>.42.fr
+``` 
+
+## Notes
 
 - The `.env` file is used to centralize project configuration.
 - It should never contain production credentials in a public repository.
 - It makes the stack easier to configure and reuse.
 
----
 
-## 4.2 Secrets and sensitive data
+
+### Secrets and sensitive data
 
 Sensitive data must not be hardcoded in Dockerfiles or scripts.
 
 Good practices:
-- store configuration values in `.env`
+- store configuration values in `.env` or `secrets/` files
 - keep credentials out of Git
 - use Docker secrets if implemented in the project
 
 ---
 
-## 5. Build and Launch
+# Build and Launch
 
-## 5.1 Start the project
+## build the project
 
 ```bash
 make
@@ -136,7 +135,10 @@ or
 ```bash
 make build
 ```
-
+or
+```bash
+docker compose -f srcs/docker-compose.yml up --build
+```
 These commands:
 - build the Docker images
 - create containers
@@ -144,31 +146,47 @@ These commands:
 - create and attach the volumes
 - start all services
 
----
+## Start the project
+```bash
+make start
+```
+or
+```bash
+docker compose -f srcs/docker-compose.yml up
+```
+These commands:
+- build the Docker images if doesn't exit
+- start all services
 
-## 5.2 Stop the project
+
+## Stop the project
 
 ```bash
 make stop
 ```
+or
+```bash
+docker stop nginx wordpress mariadb
+```
 
 This command stops the running containers.
-
----
-
-## 5.3 Clean volumes and containers data
+## Clean volumes and containers data
 
 ```bash
 make clean
 ```
+or 
+```bash
+    docker compose -f srcs/docker-compose.yml down -v
+	docker system prune -af
+    sudo rm -rf /home/${USER}/data/mariadb/* /home/${USER}/data/wordpress/*
+```
 
-This command removes project data depending on your Makefile implementation.
+This command removes project data depending on your.
 
 Use it carefully, because persistent data may be deleted.
 
----
-
-## 5.4 Full rebuild
+## Full rebuild
 
 ```bash
 make rebuild
@@ -184,7 +202,7 @@ It is useful after configuration changes or to reset the whole environment.
 
 ---
 
-## 6. Docker Commands for Development
+## Docker Commands for Development
 
 ### List running containers
 
@@ -209,6 +227,10 @@ docker logs <container_name>
 ```bash
 docker exec -it <container_name> bash
 ```
+or 
+```bash
+make access_<container_name>
+```
 
 If `bash` is not available:
 
@@ -229,11 +251,11 @@ docker network ls
 docker network inspect <network_name>
 ```
 
----
 
-## 7. Service Details
 
-## 7.1 NGINX
+## Service Details
+
+## NGINX
 
 NGINX is the public entrypoint of the infrastructure.
 
@@ -254,9 +276,9 @@ Important points:
 - only TLSv1.2 or TLSv1.3 should be enabled
 - no HTTP public entrypoint should be used in the mandatory part
 
----
 
-## 7.2 WordPress
+
+## WordPress
 
 The WordPress container runs the application with PHP-FPM.
 
@@ -279,7 +301,7 @@ Important points:
 
 ---
 
-## 7.3 MariaDB
+## MariaDB
 
 MariaDB is the database service for WordPress.
 
@@ -305,35 +327,7 @@ Important points:
 - database data must persist through volumes
 - credentials should come from environment variables or secrets
 
----
-
-## 8. Initialization Logic
-
-The project uses custom initialization scripts to configure services automatically.
-
-## 8.1 MariaDB initialization
-
-The MariaDB `init.sh` script usually:
-- starts MariaDB setup
-- creates the database
-- creates a dedicated user
-- applies privileges
-- launches the database service properly
-
-## 8.2 WordPress initialization
-
-The WordPress `init.sh` script usually:
-- waits for the database to become available
-- downloads or prepares WordPress files
-- creates `wp-config.php`
-- configures database access
-- creates the admin user
-- creates an additional user if required
-- starts PHP-FPM in foreground mode
-
----
-
-## 9. Volumes and Data Persistence
+## Volumes and Data Persistence
 
 The project uses Docker volumes to persist data.
 
@@ -371,7 +365,7 @@ Replace `<login>` with your 42 login.
 
 ---
 
-## 10. Docker Network
+## Docker Network
 
 All services communicate through a dedicated Docker network.
 
@@ -386,285 +380,3 @@ A Docker network allows containers to:
 
 - NGINX connects to `wordpress`
 - WordPress connects to `mariadb`
-
-### Forbidden networking choices in the mandatory part
-
-The project must not use:
-- `network_mode: host`
-- `--link`
-- `links:`
-
-The communication must be handled by the Docker network defined in `docker-compose.yml`.
-
----
-
-## 11. Data Flow
-
-A request typically follows this path:
-
-1. The browser accesses `https://<login>.42.fr`
-2. NGINX receives the HTTPS request on port 443
-3. NGINX forwards the request to WordPress
-4. WordPress processes PHP code through PHP-FPM
-5. WordPress communicates with MariaDB when database access is needed
-6. The response goes back through NGINX to the browser
-
-This architecture keeps each service focused on a single responsibility.
-
----
-
-## 12. Development Workflow
-
-A developer working on the project usually follows this workflow:
-
-1. configure the `.env` file
-2. check service configuration files
-3. build the infrastructure with `make`
-4. inspect logs if something fails
-5. enter containers for debugging if needed
-6. rebuild after changing Dockerfiles or scripts
-
-Typical cycle:
-
-```bash
-make
-docker ps
-docker logs <container_name>
-docker exec -it <container_name> sh
-```
-
----
-
-## 13. Troubleshooting
-
-## 13.1 Containers do not start
-
-Check all containers:
-
-```bash
-docker ps -a
-```
-
-Read logs:
-
-```bash
-docker logs <container_name>
-```
-
-Common causes:
-- wrong environment variables
-- invalid NGINX configuration
-- MariaDB not initialized correctly
-- WordPress trying to connect to the database too early
-
----
-
-## 13.2 WordPress cannot connect to MariaDB
-
-Check:
-- database service name in `docker-compose.yml`
-- database name
-- database user
-- database password
-- startup order and readiness logic
-
-Useful command:
-
-```bash
-docker logs <wordpress_container>
-docker logs <mariadb_container>
-```
-
----
-
-## 13.3 HTTPS does not work
-
-Check:
-- NGINX configuration
-- certificate path
-- TLS settings
-- domain name resolution
-
-Also verify that your local domain points correctly to your machine.
-
-Example host entry:
-
-```bash
-127.0.0.1 yourlogin.42.fr
-```
-
----
-
-## 13.4 Volume persistence does not work
-
-Check:
-- volume declarations in `docker-compose.yml`
-- volume mount points
-- host directory permissions
-- actual location under `/home/<login>/data/`
-
-Useful commands:
-
-```bash
-docker volume ls
-docker volume inspect <volume_name>
-```
-
----
-
-## 13.5 Permission issues
-
-If Docker cannot write to the data directory:
-
-```bash
-sudo chown -R $USER:$USER /home/<login>/data
-```
-
-Also verify directory existence and rights.
-
----
-
-## 14. Important Project Constraints
-
-This project follows the subject constraints.
-
-### Main technical constraints
-
-- one container per service
-- one Dockerfile per service
-- no pre-built service images except base Debian or Alpine
-- no `latest` tag
-- no hardcoded passwords in Dockerfiles
-- use environment variables
-- use a `.env` file
-- use named volumes
-- expose only port 443 through NGINX
-- use TLSv1.2 or TLSv1.3 only
-- no infinite loop hacks such as:
-  - `tail -f`
-  - `sleep infinity`
-  - `while true`
-  - starting a shell as the main process
-
-### Architecture constraints
-
-- NGINX only public entrypoint
-- WordPress without NGINX
-- MariaDB without NGINX
-- dedicated Docker network
-- persistent volumes for database and website files
-
----
-
-## 15. Design Choices
-
-## 15.1 Why Docker
-
-Docker makes the project:
-- reproducible on different machines
-- easier to deploy
-- easier to isolate
-- easier to reset and rebuild
-
-Instead of manually installing each service on the system, each service is packaged in its own image.
-
-## 15.2 Why separate containers
-
-Separating NGINX, WordPress, and MariaDB improves:
-- modularity
-- clarity
-- maintainability
-- debugging
-- security through isolation
-
-## 15.3 Why initialization scripts
-
-Custom `init.sh` scripts allow:
-- automatic setup
-- deterministic container startup
-- configuration from environment variables
-- easier project reproduction from scratch
-
----
-
-## 16. How to Extend the Project
-
-To add a new service in the future:
-
-1. create a new directory in `srcs/requirements/`
-2. add a dedicated `Dockerfile`
-3. add configuration files if needed
-4. add the service to `docker-compose.yml`
-5. connect it to the project network
-6. attach a volume if persistent data is required
-7. update the Makefile if necessary
-
-Possible examples:
-- Redis
-- Adminer
-- FTP
-- static website
-- any bonus service
-
----
-
-## 17. Useful Commands Summary
-
-### Start
-
-```bash
-make
-```
-
-### Stop
-
-```bash
-make stop
-```
-
-### Clean
-
-```bash
-make clean
-```
-
-### Rebuild
-
-```bash
-make rebuild
-```
-
-### Container list
-
-```bash
-docker ps
-```
-
-### Logs
-
-```bash
-docker logs <container_name>
-```
-
-### Shell access
-
-```bash
-docker exec -it <container_name> sh
-```
-
----
-
-## 18. Conclusion
-
-This project demonstrates how to build a small but complete infrastructure with Docker.
-
-It includes:
-- service isolation
-- HTTPS entrypoint with NGINX
-- dynamic application with WordPress and PHP-FPM
-- persistent database with MariaDB
-- Docker networking
-- persistent storage through named volumes
-- reproducible setup through Dockerfiles, scripts, and Makefile
-
-The project is structured so that a developer can clone it, configure it, build it, debug it, and extend it easily.
