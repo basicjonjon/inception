@@ -1,8 +1,8 @@
 RM = rm -rf
 
-DOCKER_COMPOSE = srcs/docker-compose.yml
-SRCS_DIR = ./srcs/
-REQ_DIR = $(SRCS_DIR)/requirements
+SRCS_DIR = srcs/
+DOCKER_COMPOSE = $(SRCS_DIR)docker-compose.yml
+REQ_DIR = $(SRCS_DIR)requirements
 MARIADB_DATA = /home/${USER}/data/mariadb/*
 WORDPRESS_DATA = /home/${USER}/data/wordpress/*
 
@@ -23,6 +23,7 @@ stop:
 	docker stop nginx wordpress mariadb
 
 clean:
+	docker compose -f srcs/docker-compose.yml down -v
 	docker system prune -af
 	sudo $(RM) $(MARIADB_DATA) $(WORDPRESS_DATA)
 	@echo "$(RED)============== [VOLUMES DELETED] ==============$(NC)"

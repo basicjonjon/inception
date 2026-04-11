@@ -32,7 +32,6 @@ services:
     restart: always
     secrets:
       - db_password
-      - root_password
       - db_user
     environment:
       MYSQL_PASSWORD_FILE: /run/secrets/db_password

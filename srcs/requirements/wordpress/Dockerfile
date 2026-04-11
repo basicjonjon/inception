@@ -7,6 +7,11 @@ RUN apt-get update && \
     php-mysql \
     wget \
     curl
+
+RUN cd /var/www/html &&\
+    wget https://wordpress.org/latest.tar.gz &&\
+    tar -xvf latest.tar.gz --strip-components=1 &&\
+    rm latest.tar.gz
 COPY ./tools/init.sh /init.sh
 RUN chmod +x /init.sh
 EXPOSE 9000

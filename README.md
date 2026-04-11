@@ -4,41 +4,56 @@
 The aim of this project is to become familiar with **Docker** and **Docker Compose** by setting up an infrastructure composed of several services: an **Nginx web server**, a **MariaDB database** and a **WordPress application**.
 
 
-___
 
-# Instruction
+# Prerequisites
 
 
-**[install docker ](https://docs.docker.com/engine/install/)** 
+### [install docker ](https://docs.docker.com/engine/install/)
 
-install make (for ubuntu)
-```
+### install make (for ubuntu)
+```bash
 sudo apt-get install
 ```
-
+### create .env file 
+in srcs/
+```bash
+touch srcs/.env
+```
+add DOMAIN_NAME and MYSQL_DATABASE environement variable
+```
+DOMAIN_NAME=login.42.fr
+MYSQL_DATABASE=wordpress
+```
+### create secret file
+```bash
+touch credential.txt db_password.txt db_root_password.txt
+```
+credential -> your admin username
+db_password -> your admin password
+credential -> your root password
 
 ## start docker
-```
+```bash
 make
 ```
 or
-```
+```bash
 make build
 ```
 
 ## stop docker
-```
+```bash
 make stop
 ```
 
 ## delete volume docker (mariadb && nginx)
-```
+```bash
 make clean
 ```
 
 ## rebuild
 stop docker if launch, delete docker volume and build docker again
-```
+```bash
 make rebuild
 ```
 
@@ -88,4 +103,3 @@ make access_<dockerName>
 [param for wordpress](https://developer.wordpress.org/advanced-administration/server/web-server/nginx/)
 
 
-___
