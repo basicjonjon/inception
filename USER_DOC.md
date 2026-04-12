@@ -92,12 +92,15 @@ To build and start the full stack, run:
 make
 ```
 
-or:
+or
 
 ```bash
 make build
 ```
-
+or 
+```bash
+make start
+```
 This will:
 - build the Docker images
 - create the containers

@@ -82,7 +82,10 @@ or
 ```bash
 make build
 ```
-
+or 
+```bash
+make start
+```
 ## stop docker
 ```bash
 make stop

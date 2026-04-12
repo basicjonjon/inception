@@ -130,6 +130,10 @@ make build
 ```
 or
 ```bash
+make start
+```
+or
+```bash
 docker compose -f srcs/docker-compose.yml up --build
 ```
 These commands:
