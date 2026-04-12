@@ -17,7 +17,7 @@ The project is designed to be:
 - isolated
 - persistent thanks to Docker volumes
 
----
+
 
 ## Project Structure
 
@@ -109,8 +109,6 @@ in `/etc/hosts` add or  change
 - It should never contain production credentials in a public repository.
 - It makes the stack easier to configure and reuse.
 
-
-
 ### Secrets and sensitive data
 
 Sensitive data must not be hardcoded in Dockerfiles or scripts.
@@ -118,9 +116,7 @@ Sensitive data must not be hardcoded in Dockerfiles or scripts.
 Good practices:
 - store configuration values in `.env` or `secrets/` files
 - keep credentials out of Git
-- use Docker secrets if implemented in the project
-
----
+- use Docker secrets
 
 # Build and Launch
 
@@ -200,7 +196,7 @@ This command usually:
 
 It is useful after configuration changes or to reset the whole environment.
 
----
+
 
 ## Docker Commands for Development
 
@@ -299,7 +295,6 @@ Important points:
 - PHP-FPM should run as the main process
 - WordPress files are stored in a persistent volume
 
----
 
 ## MariaDB
 
@@ -363,7 +358,6 @@ Replace `<login>` with your 42 login.
 - themes and plugins
 - website configuration files
 
----
 
 ## Docker Network
 

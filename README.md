@@ -32,7 +32,7 @@ MYSQL_DATABASE=wordpress
 ```
 ### create secret file
 ```bash
-touch credential.txt db_password.txt db_root_password.txt
+touch secrets/credential.txt secrets/db_password.txt secrets/db_root_password.txt
 ```
  - credential -> your admin username
 - db_password -> your admin password
