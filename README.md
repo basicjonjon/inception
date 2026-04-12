@@ -50,10 +50,9 @@ newgrp docker
 
 ### install make (for ubuntu)
 ```bash
-sudo apt-get install
+sudo apt-get install make
 ```
 ### create .env file 
-in srcs/
 ```bash
 touch srcs/.env
 ```
@@ -64,9 +63,9 @@ MYSQL_DATABASE=wordpress
 ```
 ### create secret file
 ```bash
-touch secrets/credential.txt secrets/db_password.txt secrets/db_root_password.txt
+mkdir -p secrets && touch secrets/credential.txt secrets/db_password.txt secrets/db_root_password.txt
 ```
- - credential -> your admin username
+- credential -> your admin username
 - db_password -> your admin password
 - db_root_password -> your root password
 
