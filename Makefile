@@ -19,14 +19,14 @@ start:
 	@echo "\n$(BLUE)================= [ START ] =================$(NC)\n"
 	docker compose -f $(DOCKER_COMPOSE) up
 
-stop:
-	docker stop nginx wordpress mariadb
-
 clean:
 	docker compose -f srcs/docker-compose.yml down -v
 	docker system prune -af
 	sudo $(RM) $(MARIADB_DATA) $(WORDPRESS_DATA)
 	@echo "$(RED)============== [VOLUMES DELETED] ==============$(NC)"
+
+stop: clean
+	docker stop nginx wordpress mariadb
 
 rebuild: stop clean build 
 
