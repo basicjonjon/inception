@@ -17,8 +17,6 @@ The project is designed to be:
 - isolated
 - persistent thanks to Docker volumes
 
-
-
 ## Project Structure
 
 ```bash

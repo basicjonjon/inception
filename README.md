@@ -3,7 +3,39 @@
 
 The aim of this project is to become familiar with **Docker** and **Docker Compose** by setting up an infrastructure composed of several services: an **Nginx web server**, a **MariaDB database** and a **WordPress application**.
 
+## Technical Choices and Comparisons
 
+### Virtual Machines vs Docker
+
+A **Virtual Machine** emulates a full operating system with its own kernel. It is heavier, uses more resources, and takes more time to start.  
+**Docker**, on the other hand, uses containers that share the host kernel. Containers are lighter, faster to start, and easier to reproduce.
+
+In this project, Docker is used because it allows each service to run in an isolated environment while staying lightweight and easy to manage.
+
+### Secrets vs Environment Variables
+
+**Environment variables** are simple to use and practical for configuration values such as a domain name or database name.  
+However, they are not ideal for sensitive data because they may be exposed more easily.
+
+**Secrets** are designed to store sensitive information such as passwords or private keys more securely. They reduce the risk of exposing confidential data in the project files.
+
+In this project, environment variables are used for configuration, and secrets for sensitive values like passwords.
+
+
+### Docker Network vs Host Network
+
+A **Docker network** allows containers to communicate with each other in an isolated and controlled way. Each service can reach another service by its container name.  
+A **host network** removes this isolation and makes the container use the host machine’s network directly.
+
+In this project, a Docker network is used because it is safer, cleaner, and matches the subject requirements. It keeps the services isolated while still allowing communication between NGINX, WordPress, and MariaDB.
+
+
+### Docker Volumes vs Bind Mounts
+
+A **Docker volume** is managed by Docker and is mainly used for persistent data. It is portable, easier to manage, and better suited for databases and application data.  
+A **bind mount** directly links a container path to a specific path on the host machine. It is useful during development, but it depends more on the host filesystem and is less portable.
+
+In this project, i use bind mount because the subjet In this project, I'm using bind mount because the topic requires placing volumes in specific locations, which Docker Volumes doesn't allow.
 
 # Prerequisites
 
