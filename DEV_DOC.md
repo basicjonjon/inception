@@ -88,11 +88,11 @@ MYSQL_DATABASE=wordpress
 ```
 ### create secret file
 ```bash
-mkdir -p secrets && touch secrets/credential.txt secrets/db_password.txt secrets/db_root_password.txt
+mkdir -p secrets && touch secrets/credentials.txt secrets/db_password.txt secrets/db_root_password.txt
 ```
-credential -> your admin username
-db_password -> your admin password
-credential -> your root password
+- credentials -> your admin username
+- db_password -> your admin password
+- credential -> your root password
 
 ### change host
 in `/etc/hosts` add or  change 
@@ -127,10 +127,6 @@ or
 
 ```bash
 make build
-```
-or
-```bash
-make start
 ```
 or
 ```bash

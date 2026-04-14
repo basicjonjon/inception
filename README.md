@@ -63,9 +63,9 @@ MYSQL_DATABASE=wordpress
 ```
 ### create secret file
 ```bash
-mkdir -p secrets && touch secrets/credential.txt secrets/db_password.txt secrets/db_root_password.txt
+mkdir -p secrets && touch secrets/credentials.txt secrets/db_password.txt secrets/db_root_password.txt
 ```
-- credential -> your admin username
+- credentials -> your admin username
 - db_password -> your admin password
 - db_root_password -> your root password
 
@@ -82,10 +82,7 @@ or
 ```bash
 make build
 ```
-or 
-```bash
-make start
-```
+
 ## stop docker
 ```bash
 make stop
