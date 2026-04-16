@@ -19,5 +19,5 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 
 COPY ./tools/init.sh /init.sh
 RUN chmod +x /init.sh
-EXPOSE 2000
+EXPOSE 9000
 CMD ["/init.sh"]
