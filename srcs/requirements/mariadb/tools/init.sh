@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ ! -f "/var/lib/mysql/created" ]; then
+    echo "start mysql prog"
     export MYSQL_PASSWORD=$(cat ${MYSQL_PASSWORD_FILE})
     export MYSQL_ROOT_PASSWORD=$(cat ${MYSQL_ROOT_PASSWORD_FILE})
     export MYSQL_USER=$(cat ${MYSQL_USER_FILE})

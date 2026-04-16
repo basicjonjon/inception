@@ -62,18 +62,23 @@ newgrp docker
 ```bash
 sudo apt-get install make
 ```
-### create .env file 
+### create .env file and secret file
 ```bash
-touch srcs/.env
+mkdir -p secrets srcs && \
+printf "DOMAIN_NAME=\nMYSQL_DATABASE=\nWP_TITLE=\nWP_ADMIN=\nWP_ADMIN_EMAIL=\nWP_ADMIN_PASSWORD=\nWP_USER=\nWP_USER_EMAIL=\nWP_USER_PASSWORD=\n" >> srcs/.env
+touch secrets/{credentials.txt,db_password.txt,db_root_password.txt}
 ```
-add DOMAIN_NAME and MYSQL_DATABASE environement variable
-```
+add your value in .env
+```text
 DOMAIN_NAME=login.42.fr
 MYSQL_DATABASE=wordpress
-```
-### create secret file
-```bash
-mkdir -p secrets && touch secrets/credentials.txt secrets/db_password.txt secrets/db_root_password.txt
+WP_TITLE=inception
+WP_ADMIN=WpAdminUserName
+WP_ADMIN_EMAIL=WpAdminMail@gmail.com
+WP_ADMIN_PASSWORD=XXXXXXX
+WP_USER=WpUserName
+WP_USER_EMAIL=WpUserMail@gmail.com
+WP_USER_PASSWORD=XXXXXXX
 ```
 - credentials -> your admin username
 - db_password -> your admin password

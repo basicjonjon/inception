@@ -20,7 +20,7 @@ start:
 	docker compose -f $(DOCKER_COMPOSE) up
 
 stop:
-	docker stop nginx wordpress mariadb
+	- docker compose -f srcs/docker-compose.yml stop
 
 clean:
 	docker compose -f srcs/docker-compose.yml down -v
